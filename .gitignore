@@ -1,0 +1,8 @@
+test
+configure
+dist
+test.hi
+test.o
+include/StatVFSConfig.h
+config.log
+config.status

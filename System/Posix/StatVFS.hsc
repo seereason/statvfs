@@ -3,6 +3,16 @@
 ##include "StatVFSConfig.h"
 #include "StatVFSConfig.h"
 #include "sys/statvfs.h"
+-- | Get information about a mounted filesystem.
+-- A minimal example of usage is:
+--
+-- @
+-- import System.Posix.StatVFS (statVFS, statVFS_bfree)
+--
+-- main = do
+--     stat <- statVFS "/"
+--     putStrLn $ (show (statVFS_bfree stat)) ++ " free blocks on /"
+-- @
 
 module System.Posix.StatVFS where
 
@@ -42,17 +52,28 @@ foreign import capi unsafe "sys/statvfs.h fstatvfs"
 
 foreign import capi unsafe "sys/statvfs.h statvfs"
   c_statvfs :: CString -> Ptr CStatVFS -> IO CInt
-
-data StatVFS = StatVFS { statVFS_bsize :: CULong
+-- | File system information record, reflects data mentioned in the statvfs(3) manual
+data StatVFS = StatVFS { -- | Filesystem block size
+                         statVFS_bsize :: CULong
+                         -- | Fragment size
                        , statVFS_frsize :: CULong
+                         -- | Size of fs in f_frsize units
                        , statVFS_blocks :: CFSBlkCnt
+                         -- | Free blocks
                        , statVFS_bfree :: CFSBlkCnt
+                         -- | Free blocks for unprivileged users
                        , statVFS_bavail :: CFSBlkCnt
+                         -- | Inodes
                        , statVFS_files :: CFSFilCnt
+                         -- | Free inodes
                        , statVFS_ffree :: CFSFilCnt
+                         -- | Free inodes for unprivileged users
                        , statVFS_favail :: CFSFilCnt
+                         -- | Filesystem ID
                        , statVFS_fsid :: CULong
+                         -- | Mount flags
                        , statVFS_flag :: CULong
+                         -- | Maximum filename length
                        , statVFS_namemax :: CULong
                        } deriving Show
 
